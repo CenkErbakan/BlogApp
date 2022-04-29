@@ -1,0 +1,59 @@
+@model Product
+
+<div class="card mb-2">
+    <img class="card-img-top" src="~/img/@Model.ImageUrl" alt="">
+    <div class="card-header text-center">
+        <h5 class="card-title">@Model.Name</h5>
+    </div>
+    
+    <div class="card-body text-center">
+        
+        <p class="card-text"><i>@Html.Raw(Model.Description)</i></p>
+        
+        <style>
+        .card {
+            overflow: hidden;
+            position: relative;
+            
+
+        }
+        .card > img {
+            position: static;
+            z-index: 0;
+            inset: 0;
+            
+
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 500ms;
+
+        }
+        .card:hover > img {
+            transform: scale(1.05);
+        }
+        </style>
+    
+    
+    </div>
+        <div class="card-footer text-center">
+        
+        <a asp-controller="Read" asp-action="Details" asp-route-Url="@Model.Url" class="btn btn-outline-primary btn-sm">İncele</a>
+
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form asp-controller="Cart" asp-action="AddToCart" method="POST" style="display:inline;">
+                <input type="hidden" name="productId" value="@Model.ProductId">
+                <input type="hidden" name="quantity" value="1" max="1">
+                <button type="submit" class="btn btn-outline-primary btn-sm">Sonra Oku</button>
+            </form>
+        }
+
+        </div>
+</div>   
+       
+        
+   
+   
+    

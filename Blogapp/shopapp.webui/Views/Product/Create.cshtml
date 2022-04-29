@@ -1,0 +1,44 @@
+@model Product
+
+
+<form method="POST" >
+    <div asp-validation-summary="All" class="text-danger"></div>
+    @* <div class="form-group">
+        <label for="CategoryId">Katagori</label>
+        <select asp-for="CategoryId" asp-items="@ViewBag.Categories" class="form-control">
+            <option selected disabled>Seçiniz</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>    *@
+        
+        
+    <div class="form-group">
+        <label for="ProductId">Başlık ID:</label>
+        <input asp-for="ProductId" value="@Model.ProductId" class="form-control">
+        <span asp-validation-for="ProductId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ImageUrl">Resim Url:</label>
+        <input asp-for="ImageUrl" value="@Model.ImageUrl" class="form-control">
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Name">İsim:</label>
+        <input asp-for="Name" value="@Model.Name" class="form-control">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Yazı:</label>
+        <textarea asp-for="Description" value="@Model.Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Gönder</button>
+    
+
+</form>
+
+
