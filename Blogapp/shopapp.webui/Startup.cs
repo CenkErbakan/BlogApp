@@ -18,6 +18,7 @@ using shopapp.data.Abstract;
 using shopapp.data.Concrete.EfCore;
 using shopapp.webui.EmailServices;
 using shopapp.webui.Identity;
+using shopapp.webui.Services;
 
 namespace shopapp.webui
 {
@@ -31,6 +32,9 @@ namespace shopapp.webui
        
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<RedisService>();
+            services.AddMemoryCache();
+             
             services.AddDbContext<ApplicationContext>(options=> options.UseSqlite("Data Source=shopDb"));
             services.AddIdentity<User,IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
             services.Configure<IdentityOptions>(options=>
@@ -89,8 +93,9 @@ namespace shopapp.webui
         }
 
         
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, UserManager<User> userManager, RoleManager<IdentityRole> roleManager,RedisService redisService)
         {
+            
             app.UseStaticFiles(); 
 
             app.UseStaticFiles(new StaticFileOptions
@@ -109,6 +114,7 @@ namespace shopapp.webui
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
+            redisService.Connect();
 
             
 

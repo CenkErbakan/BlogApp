@@ -4,20 +4,32 @@ using Microsoft.AspNetCore.Mvc;
 using shopapp.business.Abstract;
 using shopapp.data.Abstract;
 using shopapp.webui.Models;
+using shopapp.webui.Services;
+using StackExchange.Redis;
 
 namespace shopapp.webui.Controllers
 {
     
+    
     public class HomeController:Controller
-    {     
-         private IProductService _productService;
+    {
+        private readonly RedisService _redisService;
+        private readonly IDatabase db;
+        private string listkey= "İletişim Ziyaretçisi";
 
-         public HomeController(IProductService productService)
+         
+        private IProductService _productService;
+
+         public HomeController(IProductService productService ,RedisService redisService )
          {
              this._productService = productService;
+             _redisService=redisService;
+             db=_redisService.GetDb(0);
+             
          }
         public IActionResult Index()
         {
+            db.StringSet(listkey,0);
             var productViewModel = new ProductListViewModel()
             {
                 Products = _productService.GetHomePageProducts()
@@ -32,8 +44,12 @@ namespace shopapp.webui.Controllers
             return View();
         }
 
-         public IActionResult Contact()
+         public IActionResult Contact(string name)
         {
+             var value = db.StringGet("name");
+            // var count = db.StringDecrementAsync("ziyaretci",1).Result;
+            db.StringIncrementAsync(listkey,1).Wait();
+            
             return View("MyView");
         }
     }

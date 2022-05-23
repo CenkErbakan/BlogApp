@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using shopapp.business.Abstract;
 using shopapp.webui.EmailServices;
@@ -16,16 +17,18 @@ namespace shopapp.webui.Controllers
     [AutoValidateAntiforgeryToken]
     public class AccountController : Controller
     {
+        private IMemoryCache _memoryCache;
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
         private IEmailSender _emailSender;
         private ICartService _cartService;
-        public AccountController(UserManager<User> userManager,SignInManager<User> signInManager,IEmailSender emailSender,ICartService cartService)
+        public AccountController(UserManager<User> userManager,SignInManager<User> signInManager,IEmailSender emailSender,ICartService cartService,IMemoryCache memoryCache)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _cartService = cartService;
+            _memoryCache = memoryCache;
         }
         public IActionResult Login(string ReturnUrl=null)
         {
@@ -108,7 +111,7 @@ namespace shopapp.webui.Controllers
                 });
                 Console.WriteLine(url);
                 //email
-                await _emailSender.SendEmailAsync(model.Email,"Hesabınızı onaylayınız.",$"Lütfen Email hesabınız onaylamak için linke <a href='https://localhost:5000{url}'>tıklayınız</a>");
+                await _emailSender.SendEmailAsync(model.Email,"Hesabınızı onaylayınız.",$"Lütfen Email hesabınız onaylamak için linke <a href='http://localhost:5000{url}'>tıklayınız</a>");
 
                 return RedirectToAction("Login","Account");
             }
